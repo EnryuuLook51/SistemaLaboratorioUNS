@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Sistema de Reserva de Laboratorios · UNS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter%3Awght%40100..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      *, ::before, ::after {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100svh;
+        display: grid;
+        place-items: center;
+        padding: 24px 12px;
+        background: #F8FAFD;
+      }
+      .diagram-viewport {
+        width: min(100%, 1280px);
+        aspect-ratio: 16 / 9;
+        position: relative;
+        overflow: hidden;
+        background: #F8FAFD;
+      }
+      .diagram-canvas {
+        position: absolute;
+        inset: 0 auto auto 0;
+        transform: scale(var(--diagram-scale, 1));
+        transform-origin: top left;
+      }
+      @media (max-width: 700px) {
+        body { padding: 12px 8px; }
+      }
+    </style>
+
+  <style>
+    [data-pencil-name="Arquitectura de reserva de laboratorios UNS"] { transform-origin: top left; }
+  </style>
+  </head>
+  <body style="background-color: #F8FAFD">
+    <main class="diagram-viewport"><div class="diagram-canvas" style="height: 720px; position: relative; width: 1280px">
+      <div
+        data-pencil-name="Arquitectura de reserva de laboratorios UNS"
+        style="background-color: #F8FAFD; box-sizing: border-box; height: 720px; left: 0px; position: absolute; top: 0px; width: 1280px"
+      >
+        <div
+          data-pencil-name="Título"
+          style="box-sizing: border-box; color: #14243A; font-family: Inter, system-ui, sans-serif; font-size: 28px; font-style: normal; font-weight: 700; left: 42px; letter-spacing: 0px; line-height: normal; position: absolute; text-align: left; top: 28px; white-space: nowrap; z-index: 0"
+        >
+          Sistema de Reserva de Laboratorios · UNS
+        </div>
+        <div
+          data-pencil-name="Subtítulo"
+          style="box-sizing: border-box; color: #53657C; font-family: Inter, system-ui, sans-serif; font-size: 14px; font-style: normal; font-weight: 400; left: 44px; letter-spacing: 0px; line-height: normal; position: absolute; text-align: left; top: 68px; white-space: nowrap; z-index: 1"
+        >
+          Arquitectura inicial · comunicación entre usuarios, interfaz, servicios y persistencia
+        </div>
+        <div
+          data-pencil-name="Usuarios"
+          style="background-color: #EEF5FF; border-radius: 14px; box-shadow: 0px 3px 10px #12243A12; box-sizing: border-box; height: 220px; left: 40px; outline-offset: -0.75px; outline: 1.5px solid #B9CEE8; position: absolute; top: 205px; width: 195px; z-index: 2"
+        >
+          <div
+            data-pencil-name="Usuarios título"
+            style="box-sizing: border-box; color: #14243A; font-family: Inter, system-ui, sans-serif; font-size: 16px; font-style: normal; font-weight: 700; left: 54px; letter-spacing: 0px; line-height: normal; position: absolute; text-align: left; top: 19px; width: 123px; z-index: 0"
+          >
+            Usuarios
+          </div>
+          <div
+            data-pencil-name="Usuarios detalle"
+            style="box-sizing: border-box; color: #53657C; font-family: Inter, system-ui, sans-serif; font-size: 13px; font-style: normal; font-weight: 400; left: 18px; letter-spacing: 0px; line-height: 18px; position: absolute; text-align: left; top: 59px; width: 159px; z-index: 1"
+          >
+            Docente
+            <br />
+            Delegado de curso
+            <br />
+            Administrador de laboratorio
+            <br />
+            Coordinador académico
+          </div>
+          <svg
+            data-pencil-name="Icono grupo de usuarios"
+            data-icon-name="users-round"
+            data-icon-set="lucide"
+            viewBox="0 0 13.99993896484375 14"
+            preserveAspectRatio="xMidYMid meet"
+            xmlns="http://www.w3.org/2000/svg"
+            style="box-sizing: border-box; height: 25px; left: 18px; position: absolute; top: 17px; width: 25px; z-index: 2"
+          >
+            <path
+              d="M5.36279 1.20313q-0.54688 0.07178-1.0459 0.31103-0.49561 0.23584-0.88525 0.61523-0.47852 0.44775-0.74512 0.99122-0.43408 0.9126-0.34179 1.88671 0.09229 0.9707 0.70752 1.76709 0.08545 0.14014 0.25293 0.31104 0.16748 0.16748 0.29394 0.27685l0.10938 0.08545-0.24952 0.12647q-0.71436 0.3623-1.30224 0.95019-0.25293 0.23926-0.3999 0.42383-0.14697 0.18115-0.31446 0.43067-0.12646 0.18457-0.28711 0.49902-0.16064 0.31445-0.23242 0.50928-0.32129 0.88184-0.33496 1.73633 0 0.18115 0.00684 0.23242 0.00684 0.04785 0.03418 0.1333 0.05811 0.0957 0.14013 0.18115 0.21191 0.19482 0.50586 0.14697 0.29395-0.04785 0.42041-0.31445 0.02734-0.07178 0.03418-0.12647 0.00684-0.05811 0.02051-0.25292 0.02734-0.4751 0.12646-0.875 0.09912-0.3999 0.29395-0.78956 0.44775-0.93994 1.30225-1.5415 0.85449-0.60156 1.87646-0.71435 0.93652-0.11279 1.81836 0.1914 0.88184 0.30078 1.55518 0.9707 0.48877 0.49219 0.79638 1.14502 0.30762 0.64941 0.36573 1.30567l0.04101 0.40674q0.01367 0.16748 0.04102 0.25976 0.03076 0.08887 0.12646 0.18115 0.09912 0.08887 0.18115 0.12647 0.08545 0.03418 0.22559 0.03418 0.14014 0 0.22217-0.03418 0.08545-0.0376 0.18115-0.1333 0.09912-0.09912 0.1333-0.18115 0.0376-0.08545 0.0376-0.28028 0.01367-0.57422-0.16065-1.24756-0.17432-0.67334-0.48193-1.23046-0.3794-0.68701-0.95361-1.24073-0.57422-0.55371-1.26123-0.90234l-0.24951-0.12647 0.06835-0.05468q0.09912-0.08545 0.30762-0.30078 0.21191-0.21875 0.29395-0.33155 0.49219-0.65625 0.64599-1.49707 0.04102-0.18115 0.04102-0.52295 0-0.34521-0.02735-0.54004-0.12646-0.89551-0.63916-1.60302-0.50928-0.70752-1.32275-1.08692-0.52979-0.24951-1.104-0.32129-0.18457-0.01367-0.45117-0.01367-0.26318 0-0.417 0.02735z m4.74414 0.39306q-0.12647 0.02734-0.23242 0.11279-0.10254 0.08203-0.15722 0.19483-0.04443 0.08545-0.05127 0.22558-0.00684 0.14014 0.02734 0.23926 0.0376 0.0957 0.10596 0.17432 0.07178 0.0752 0.22558 0.17432 0.38965 0.26318 0.64942 0.64257 0.25977 0.37939 0.35888 0.84082 0.04102 0.15381 0.04102 0.46143 0 0.30762-0.04102 0.46143-0.08545 0.39307-0.28369 0.73828-0.19482 0.3418-0.48877 0.57763-0.15381 0.12646-0.19482 0.17774-0.04102 0.04785-0.09912 0.14355-0.05469 0.12646-0.04102 0.28711 0.01367 0.16064 0.09912 0.27344 0.02734 0.05811 0.2666 0.2666 1.00488 0.84082 1.55176 2.15674 0.33838 0.79639 0.39307 1.65088 0.01367 0.29395 0.03418 0.3999 0.02051 0.10596 0.07861 0.18799 0.15381 0.23926 0.42383 0.2666 0.27344 0.02734 0.47168-0.18115 0.12646-0.11279 0.15381-0.25293 0.02734-0.14014 0.01367-0.46143-0.04101-0.65967-0.21191-1.26806-0.16748-0.6084-0.48877-1.23731-0.4751-0.95361-1.16211-1.68164l-0.18116-0.18115 0.06836-0.08545q0.08545-0.08203 0.19825-0.26318 0.46142-0.67334 0.58105-1.46973 0.11963-0.7998-0.1333-1.56885-0.16748-0.51953-0.49219-0.96728-0.32129-0.44775-0.75537-0.76905-0.2666-0.19824-0.42041-0.25293-0.15381-0.05469-0.30762-0.01367z m-3.87597 0.76904q0.71436 0.12646 1.24414 0.65284 0.5332 0.52295 0.65967 1.25097 0.01367 0.14014 0.0205 0.3794 0.00684 0.23926-0.0205 0.3623-0.07178 0.44775-0.29053 0.82715-0.21533 0.37939-0.55029 0.64258-0.54688 0.43408-1.24073 0.50586-0.69043 0.06836-1.30566-0.25293-0.47852-0.25293-0.79297-0.69385-0.31445-0.44092-0.41357-0.95703-0.02734-0.14014-0.02735-0.3999 0-0.25977 0.01367-0.38623 0.14014-0.79639 0.73487-1.33985 0.59473-0.54688 1.38086-0.60498 0.29395-0.02734 0.58789 0.02735l0-0.01368z"
+              fill="#6689B3"
+            ></path>
+          </svg>
+        </div>
+        <div
+          data-pencil-name="Interfaz web"
+          style="background-color: #EEF8F5; border-radius: 14px; box-shadow: 0px 3px 10px #12243A12; box-sizing: border-box; height: 175px; left: 280px; outline-offset: -0.75px; outline: 1.5px solid #B8D9D0; position: absolute; top: 225px; width: 210px; z-index: 3"
+        >
+          <div
+            data-pencil-name="Interfaz web título"
+            style="box-sizing: border-box; color: #14243A; font-family: Inter, system-ui, sans-serif; font-size: 16px; font-style: normal; font-weight: 700; left: 54px; letter-spacing: 0px; line-height: normal; position: absolute; text-align: left; top: 20px; width: 138px; z-index: 0"
+          >
+            Interfaz web
+          </div>
+          <div
+            data-pencil-name="Interfaz web detalle"
+            style="box-sizing: border-box; color: #53657C; font-family: Inter, system-ui, sans-serif; font-size: 13px; font-style: normal; font-weight: 400; left: 18px; letter-spacing: 0px; line-height: 18px; position: absolute; text-align: left; top: 58px; width: 174px; z-index: 1"
+          >
+            Consulta disponibilidad
+            <br />
+            Envía y muestra solicitudes
+            <br />
+            Presenta estado y avisos
+          </div>
+          <svg
+            data-pencil-name="Icono interfaz web"
+            data-icon-name="monitor"
+            data-icon-set="lucide"
+            viewBox="0 0 13.99993896484375 14"
+            preserveAspectRatio="xMidYMid meet"
+            xmlns="http://www.w3.org/2000/svg"
+            style="box-sizing: border-box; height: 25px; left: 18px; position: absolute; top: 17px; width: 25px; z-index: 2"
+          >
+            <path
+              d="M1.97559 1.20313q-0.47852 0.09912-0.83741 0.44433-0.35547 0.3418-0.4956 0.80322-0.02734 0.14014-0.04102 0.32129-0.01367 0.23926-0.02734 0.92285l0.01367 4.63477q0 0.54688 0.02734 0.72803 0.01367 0.12646 0.05811 0.25293l0.01367 0.04101q0.14014 0.37939 0.42725 0.65284 0.28711 0.27002 0.66308 0.39648l0.01368 0.01367q0.14014 0.04443 0.2666 0.05811 0.15381 0.01367 0.6289 0.02734l3.73926 0 0 1.17578-1.91748 0-0.08545 0.04102q-0.22217 0.11279-0.30078 0.33838-0.0752 0.22217 0.00684 0.43408 0.05811 0.0957 0.14013 0.18115 0.08545 0.08203 0.16748 0.11963 0.08545 0.03418 0.40674 0.03418l2.15674 0 2.15674 0q0.32129 0 0.40332-0.03418 0.08545-0.0376 0.16748-0.11963 0.08545-0.08545 0.1333-0.18799 0.05127-0.10596 0.05127-0.23242 0-0.12646-0.04102-0.23926-0.09912-0.19482-0.29394-0.29394l-0.08545-0.04102-1.91748 0 0-1.17578 3.73926 0q0.4751-0.01367 0.6289-0.02734 0.12646-0.01367 0.2666-0.05811l0.01368-0.01367q0.37598-0.12646 0.66308-0.39648 0.28711-0.27344 0.42725-0.65284l0.01367-0.04101q0.04443-0.12646 0.05811-0.25293 0.02734-0.18115 0.02734-0.71436l0.01367-4.64844q-0.01367-0.68359-0.02734-0.92285-0.01367-0.18115-0.04102-0.32129-0.14014-0.4751-0.50586-0.81005-0.3623-0.33838-0.84082-0.4375-0.10938-0.02734-0.81006-0.02735l-4.21435 0-4.17334 0q-0.72803 0.01367-0.8374 0.02735z m9.78564 1.14843q0.30762 0.04102 0.43408 0.32129l0.04102 0.09912 0 6.13184-0.04102 0.09912q-0.11279 0.2085-0.32471 0.29394l-0.0957 0.02735-9.5498 0-0.09571-0.02735q-0.21191-0.08545-0.3247-0.29394l-0.04102-0.09912 0-6.13184 0.04102-0.09912q0.05811-0.12646 0.16748-0.21533 0.11279-0.09229 0.23242-0.11279 0.11963-0.02051 4.78174-0.02051 4.66211 0 4.7749 0.02734z"
+              fill="#5B9D8B"
+            ></path>
+          </svg>
+        </div>
+        <div
+          data-pencil-name="Servicio de reservas"
+          style="background-color: #FFF7EA; border-radius: 14px; box-shadow: 0px 3px 10px #12243A12; box-sizing: border-box; height: 160px; left: 540px; outline-offset: -0.75px; outline: 1.5px solid #E9D2AA; position: absolute; top: 195px; width: 260px; z-index: 4"
+        >
+          <div
+            data-pencil-name="Servicio de reservas título"
+            style="box-sizing: border-box; color: #14243A; font-family: Inter, system-ui, sans-serif; font-size: 16px; font-style: normal; font-weight: 700; left: 54px; letter-spacing: 0px; line-height: normal; position: absolute; text-align: left; top: 19px; width: 188px; z-index: 0"
+          >
+            Servicio de reservas
+          </div>
+          <div
+            data-pencil-name="Servicio de reservas detalle"
+            style="box-sizing: border-box; color: #53657C; font-family: Inter, system-ui, sans-serif; font-size: 13px; font-style: normal; font-weight: 400; left: 18px; letter-spacing: 0px; line-height: 18px; position: absolute; text-align: left; top: 57px; width: 224px; z-index: 1"
+          >
+            Valida fechas y horarios
+            <br />
+            Coordina alta, cambios y cancelación
+            <br />
+            Aplica reglas de reserva
+          </div>
+          <svg
+            data-pencil-name="Icono calendario de reservas"
+            data-icon-name="calendar-days"
+            data-icon-set="lucide"
+            viewBox="0 0 13.99993896484375 14"
+            preserveAspectRatio="xMidYMid meet"
+            xmlns="http://www.w3.org/2000/svg"
+            style="box-sizing: border-box; height: 25px; left: 18px; position: absolute; top: 17px; width: 25px; z-index: 2"
+          >
+            <path
+              d="M4.57666 0.60156q-0.12305 0.01367-0.24268 0.09912-0.11963 0.08203-0.1914 0.19483-0.04102 0.08545-0.05469 0.20508-0.01367 0.11621-0.01367 0.35546l0 0.29395-1.32959 0.01367q-0.14014 0.01367-0.23926 0.02735-0.50244 0.14014-0.85449 0.50586-0.34863 0.3623-0.44776 0.88183-0.02734 0.0957-0.02734 0.81006l0 7.99463 0.05469 0.15381q0.15723 0.51953 0.56055 0.86133 0.40674 0.3418 0.93994 0.3999 0.15381 0.02734 4.26904 0.02734 4.11523 0 4.26904-0.02734 0.30762-0.02734 0.58789-0.16748 0.32471-0.15381 0.56055-0.44092 0.23926-0.28711 0.35205-0.65283l0.05469-0.15381 0-7.99463q0-0.71436-0.02735-0.81006-0.09912-0.51953-0.45117-0.88183-0.34863-0.36572-0.85107-0.50586-0.09912-0.01367-0.23926-0.02735l-1.32959-0.01367 0-0.29395q0-0.32129-0.03418-0.45459-0.03418-0.1333-0.14697-0.24609-0.14014-0.14014-0.35889-0.16064-0.21533-0.02051-0.37597 0.09228-0.16064 0.10938-0.21875 0.29395-0.02734 0.05469-0.03418 0.1333-0.00684 0.0752-0.00684 0.30078l0 0.33496-3.5 0 0-0.34863q0-0.23926-0.00684-0.30762-0.00684-0.07178-0.03418-0.12646-0.08545-0.21191-0.25293-0.30762-0.16748-0.09912-0.37939-0.05811z m-0.50244 2.67285q0.01367 0.25293 0.02051 0.31788 0.00684 0.06152 0.03418 0.14697 0.05811 0.0957 0.14013 0.18115 0.21191 0.19482 0.50586 0.14697 0.29395-0.04785 0.42041-0.31445 0.02734-0.08545 0.03418-0.14014 0.00684-0.05811 0.02051-0.32129l0-0.36572 3.5 0 0 0.36572q0.01367 0.26318 0.02051 0.32129 0.00684 0.05469 0.03418 0.14014 0.12646 0.2666 0.42041 0.31445 0.29395 0.04785 0.50586-0.14697 0.08203-0.08545 0.14013-0.18115 0.02734-0.08545 0.03418-0.14697 0.00684-0.06494 0.02051-0.31788l0-0.34863 1.31592 0 0.08545 0.04102q0.08203 0.04443 0.15722 0.12304 0.07861 0.0752 0.11963 0.16065 0.04443 0.08203 0.05811 0.28027 0.01367 0.19482 0.01367 0.85108l0 0.86816-9.35156 0 0.01367-1.72266q0.01367-0.16748 0.02734-0.20849 0.09912-0.2666 0.35206-0.36572 0.05469-0.01367 0.16748-0.02735l1.18945 0 0 0.34863z m7.58789 5.82422q0 1.89014-0.00684 2.30371-0.00683 0.41357-0.0205 0.45459-0.09912 0.25293-0.35206 0.35205l-0.0957 0.04102-8.37402 0-0.0957-0.04102q-0.15381-0.0581-0.26661-0.19824l-0.02734-0.02734q-0.04443-0.05469-0.05811-0.15381-0.02734-0.14014-0.02734-0.60156l-0.01367-4.80225 9.35156 0-0.01367 2.67285z m-7.08545-1.49707q-0.23584 0.02734-0.38281 0.23242-0.14697 0.20166-0.09229 0.44092 0.02734 0.18115 0.15381 0.29395 0.16748 0.16748 0.42041 0.16748 0.14014 0 0.23926-0.04102 0.2085-0.09912 0.28369-0.29394 0.07861-0.19824 0.03076-0.39991-0.04785-0.20508-0.23242-0.32128-0.18115-0.11963-0.42041-0.07862z m2.32422 0q-0.18115 0.02734-0.32129 0.16748-0.2085 0.21191-0.15381 0.50586 0.05469 0.29395 0.32129 0.42041 0.09912 0.04102 0.25293 0.04102 0.25293 0 0.42041-0.16748 0.12646-0.12646 0.15381-0.30762 0.05469-0.29395-0.15723-0.50244-0.2085-0.21191-0.51611-0.15723z m2.32422 0q-0.18115 0.02734-0.32129 0.18115-0.14014 0.15381-0.15381 0.35206-0.01367 0.23584 0.16064 0.42724 0.17432 0.18799 0.42725 0.18799 0.19482 0 0.34863-0.11963 0.15381-0.11963 0.2085-0.30762 0.05811-0.18799-0.02051-0.37597-0.0752-0.19141-0.24951-0.28711-0.17432-0.09912-0.3999-0.05811z m-4.74414 2.35156q-0.18457 0.0581-0.29053 0.21192-0.10254 0.15381-0.10254 0.33496 0 0.23926 0.17432 0.41357 0.17432 0.17432 0.42041 0.16065 0.24609-0.01367 0.3999-0.16748 0.09912-0.09912 0.12646-0.18115 0.02734-0.08545 0.02735-0.23926 0-0.15381-0.04102-0.23926-0.08545-0.18115-0.2666-0.2666-0.08545-0.04102-0.23242-0.05469-0.14697-0.01367-0.21533 0.02734z m2.36523-0.01367q-0.25293 0.08545-0.37939 0.30762-0.04102 0.08545-0.04102 0.23926 0 0.15381 0.03418 0.23926 0.0376 0.08203 0.1333 0.18115 0.15381 0.15381 0.3999 0.16748 0.24609 0.01367 0.42041-0.16065 0.17432-0.17432 0.17432-0.41357 0-0.23926-0.16748-0.3999-0.16748-0.16064-0.39307-0.17432-0.14014 0-0.18115 0.01367z m2.2832 0.01367q-0.09912 0.04443-0.1914 0.12989-0.08887 0.08203-0.12647 0.16064-0.03418 0.0752-0.04101 0.11621-0.00684 0.04102-0.00684 0.14014 0 0.15381 0.04102 0.25293 0.07178 0.15381 0.21875 0.23926 0.14697 0.08203 0.31445 0.08203 0.16748 0 0.30762-0.08203 0.14014-0.08545 0.22558-0.23926 0.04102-0.09912 0.04102-0.25293 0-0.09912-0.00684-0.14014-0.00684-0.04102-0.03418-0.11279-0.05811-0.08203-0.14355-0.16406-0.08203-0.08545-0.18115-0.11963-0.0957-0.0376-0.21534-0.0376-0.11963 0-0.20166 0.02734z"
+              fill="#C38D3C"
+            ></path>
+          </svg>
+        </div>
+        <div
+          data-pencil-name="Usuarios y permisos"
+          style="background-color: #F4F0FC; border-radius: 14px; box-shadow: 0px 3px 10px #12243A12; box-sizing: border-box; height: 145px; left: 540px; outline-offset: -0.75px; outline: 1.5px solid #D1C4E7; position: absolute; top: 395px; width: 260px; z-index: 5"
+        >
+          <div
+            data-pencil-name="Usuarios y permisos título"
+            style="box-sizing: border-box; color: #14243A; font-family: Inter, system-ui, sans-serif; font-size: 14px; font-style: normal; font-weight: 700; left: 54px; letter-spacing: 0px; line-height: normal; position: absolute; text-align: left; top: 12px; width: 188px; z-index: 0"
+          >
+            Servicio de usuarios y permisos
+          </div>
+          <div
+            data-pencil-name="Usuarios y permisos detalle"
+            style="box-sizing: border-box; color: #53657C; font-family: Inter, system-ui, sans-serif; font-size: 13px; font-style: normal; font-weight: 400; left: 18px; letter-spacing: 0px; line-height: 18px; position: absolute; text-align: left; top: 60px; width: 224px; z-index: 1"
+          >
+            Autentica usuarios
+            <br />
+            Autoriza por rol y propiedad
+          </div>
+          <svg
+            data-pencil-name="Icono permisos"
+            data-icon-name="shield-check"
+            data-icon-set="lucide"
+            viewBox="0 0 13.99993896484375 14"
+            preserveAspectRatio="xMidYMid meet"
+            xmlns="http://www.w3.org/2000/svg"
+            style="box-sizing: border-box; height: 25px; left: 18px; position: absolute; top: 17px; width: 25px; z-index: 2"
+          >
+            <path
+              d="M6.84619 0.60156q-0.34863 0.02734-0.68701 0.30762-0.51611 0.42041-1.00147 0.70068-0.48193 0.28027-1.01513 0.4751-0.30762 0.11279-0.58789 0.1709-0.28027 0.05469-0.66992 0.08203-0.23926 0.01367-0.36573 0.07178-0.19482 0.06836-0.37939 0.22217-0.18115 0.15381-0.26319 0.34863l-0.01367 0.03076q-0.07178 0.12646-0.08545 0.22217-0.01367 0.15381-0.02734 0.60156l0 1.78076q0 2.25244 0.01367 2.46094 0.14014 1.6543 1.10742 2.88477 0.14014 0.16748 0.43409 0.46142 0.29395 0.29394 0.48877 0.44775 0.92285 0.7417 2.2832 1.27491 0.46143 0.18115 0.65625 0.23926 0.23926 0.05469 0.43408 0.01367 0.16748-0.02734 0.5332-0.15381 1.35693-0.51953 2.27979-1.20313 0.37939-0.2666 0.71435-0.60498 1.37402-1.3706 1.54151-3.37353 0.01367-0.23584 0.01367-2.46094 0-2.22852-0.02734-2.35498-0.07178-0.32129-0.31787-0.56396-0.24268-0.24609-0.5503-0.31788-0.09912-0.02734-0.37939-0.04101-0.48877-0.02734-0.96387-0.18115-0.81348-0.2666-1.55518-0.77246-0.2666-0.18115-0.64257-0.48877-0.42041-0.33496-0.96729-0.28028z m0.43408 1.34326q0.64258 0.51953 1.32959 0.86817 1.2168 0.61865 2.25244 0.68701l0.21192 0-0.01367 4.31348q0 0.33496-0.02735 0.50244-0.22559 1.34326-1.1416 2.27637-0.91602 0.92969-2.66601 1.57226l-0.21192 0.08545-0.18115-0.05469q-2.32422-0.85449-3.2334-2.22851-0.47852-0.71436-0.63232-1.63721-0.02734-0.18115-0.02735-0.50244l-0.01367-4.32715 0.19483 0q0.86816-0.05469 1.84912-0.48193 0.98096-0.42725 1.83545-1.12793 0.16748-0.14014 0.19482-0.14014 0.02734 0 0.28027 0.19482z m1.32959 3.31885q-0.06836 0.02734-0.12646 0.05127-0.05469 0.02051-1.06299 1.02539l-0.99463 0.99463-0.40674-0.40332q-0.2666-0.2666-0.3623-0.33838-0.12646-0.11279-0.19824-0.14013-0.06836-0.02734-0.19483-0.02735-0.12646 0-0.16748 0.01367-0.04102 0.01367-0.09912 0.04102-0.18115 0.09912-0.28027 0.2666-0.04102 0.08545-0.04102 0.25293l0 0.01367q0 0.14014 0.03418 0.21192 0.0376 0.06836 0.17774 0.22216 0.0957 0.11279 0.48876 0.50586l0.04102 0.04102q0.42041 0.42041 0.55371 0.54687 0.1333 0.12305 0.20166 0.15381 0.14014 0.06836 0.29395 0.05469 0.15381-0.01367 0.28027-0.09912 0.07178-0.05469 1.28857-1.27149 0.86816-0.86816 1.04932-1.06298 0.18457-0.19824 0.21192-0.27002 0.0957-0.27686-0.05811-0.52295-0.15381-0.24609-0.44775-0.25977-0.12646-0.01367-0.18116 0z"
+              fill="#8A76B6"
+            ></path>
+          </svg>
+        </div>
+        <div
+          data-pencil-name="Base de datos"
+          style="background-color: #EEF3F8; border-radius: 14px; box-shadow: 0px 3px 10px #12243A12; box-sizing: border-box; height: 170px; left: 900px; outline-offset: -0.75px; outline: 1.5px solid #C2CEDB; position: absolute; top: 195px; width: 280px; z-index: 6"
+        >
+          <div
+            data-pencil-name="Base de datos título"
+            style="box-sizing: border-box; color: #14243A; font-family: Inter, system-ui, sans-serif; font-size: 16px; font-style: normal; font-weight: 700; left: 54px; letter-spacing: 0px; line-height: normal; position: absolute; text-align: left; top: 19px; width: 208px; z-index: 0"
+          >
+            Base de datos
+          </div>
+          <div
+            data-pencil-name="Base de datos detalle"
+            style="box-sizing: border-box; color: #53657C; font-family: Inter, system-ui, sans-serif; font-size: 13px; font-style: normal; font-weight: 400; left: 18px; letter-spacing: 0px; line-height: 18px; position: absolute; text-align: left; top: 57px; width: 244px; z-index: 1"
+          >
+            Usuarios · laboratorios
+            <br />
+            Reservas · horarios
+            <br />
+            Restricción anti-superposición
+            <br />
+            Historial de cambios
+          </div>
+          <svg
+            data-pencil-name="Icono base de datos"
+            data-icon-name="database"
+            data-icon-set="lucide"
+            viewBox="0 0 13.99993896484375 14"
+            preserveAspectRatio="xMidYMid meet"
+            xmlns="http://www.w3.org/2000/svg"
+            style="box-sizing: border-box; height: 25px; left: 18px; position: absolute; top: 17px; width: 25px; z-index: 2"
+          >
+            <path
+              d="M6.49756 0.60156q-0.98096 0.02734-1.87647 0.16748-0.89551 0.14014-1.58252 0.3794-1.59619 0.56055-1.83544 1.46972-0.02734 0.09912-0.02735 0.70069l0 3.68115 0 3.68115q0 0.60156 0.02734 0.70069 0.21191 0.81348 1.4834 1.34326 0.86816 0.35205 2.08496 0.5332 1.22021 0.18115 2.52247 0.15381 1.32959-0.02734 2.50537-0.25293 0.86816-0.16748 1.51758-0.44092 0.65283-0.27344 1.01513-0.61523 0.36572-0.3418 0.46484-0.72119 0.02734-0.09912 0.02735-0.68702l0-3.69482 0-3.69482q0-0.58789-0.02735-0.68702-0.19824-0.76904-1.37402-1.28515-1.17578-0.51953-3.10693-0.69043-0.29395-0.02734-0.70069-0.04102l-0.51611-0.01367q-0.14014 0-0.60156 0.01367z m1.14502 1.16211q2.06104 0.09912 3.27783 0.61524 0.30762 0.14014 0.52295 0.29394 0.21875 0.15381 0.20508 0.25293 0.01367 0.02734-0.07178 0.11279-0.26318 0.28027-0.95703 0.52637-0.69385 0.24268-1.63037 0.38281-0.5332 0.07178-0.89209 0.09229-0.35547 0.02051-1.09717 0.02051-0.7417 0-1.10059-0.02051-0.35547-0.02051-0.88867-0.09229-0.81006-0.11279-1.44238-0.31445-0.62891-0.20166-0.96387-0.44092-0.09912-0.07178-0.17773-0.15381-0.0752-0.08545-0.0752-0.11279 0-0.09912 0.18115-0.23926 0.61865-0.4751 2.06446-0.73144 1.44922-0.25977 3.04541-0.19141z m-4.91162 2.79932q0.86816 0.36572 2.12597 0.54687 1.23389 0.16748 2.56348 0.14014 1.37061-0.04102 2.53272-0.29395 0.88184-0.18115 1.62353-0.51953l0.09912-0.04101-0.01367 2.63183-0.04102 0.05811q-0.05811 0.06836-0.21875 0.18115-0.16064 0.11279-0.32812 0.19483-0.92285 0.44775-2.53272 0.62548-1.60986 0.17432-3.17871-0.01025-0.72803-0.08203-1.37402-0.24268-0.64258-0.16064-1.05615-0.3623-0.41357-0.20508-0.54004-0.37256l-0.05469-0.07178-0.01367-2.63183 0.40674 0.16748z m0.02734 4.10156q1.16211 0.46484 2.98047 0.61865 0.33838 0.04102 1.26123 0.04102 0.92285 0 1.26123-0.04102 1.53809-0.14014 2.60107-0.47851 0.43408-0.15381 0.72803-0.29395l0.08545-0.04101 0 2.61816-0.05469 0.07178q-0.16748 0.23584-0.73486 0.4751-0.56738 0.23584-1.30908 0.37597-1.22021 0.23926-2.57715 0.23926-1.35693 0-2.57715-0.23926-0.7417-0.14014-1.30908-0.37597-0.56738-0.23926-0.73486-0.4751l-0.05469-0.07178 0-2.61816 0.11279 0.05468q0.0957 0.05811 0.32129 0.14014z"
+              fill="#71869C"
+            ></path>
+          </svg>
+        </div>
+        <div
+          data-pencil-name="Notificaciones"
+          style="background-color: #EEF8F1; border-radius: 14px; box-shadow: 0px 3px 10px #12243A12; box-sizing: border-box; height: 125px; left: 900px; outline-offset: -0.75px; outline: 1.5px solid #BDD8C5; position: absolute; top: 460px; width: 280px; z-index: 7"
+        >
+          <div
+            data-pencil-name="Notificaciones título"
+            style="box-sizing: border-box; color: #14243A; font-family: Inter, system-ui, sans-serif; font-size: 16px; font-style: normal; font-weight: 700; left: 54px; letter-spacing: 0px; line-height: normal; position: absolute; text-align: left; top: 18px; width: 208px; z-index: 0"
+          >
+            Notificaciones
+          </div>
+          <div
+            data-pencil-name="Notificaciones detalle"
+            style="box-sizing: border-box; color: #53657C; font-family: Inter, system-ui, sans-serif; font-size: 13px; font-style: normal; font-weight: 400; left: 18px; letter-spacing: 0px; line-height: 18px; position: absolute; text-align: left; top: 55px; width: 244px; z-index: 1"
+          >
+            Confirmaciones y cambios
+            <br />
+            Aviso de rechazo o cancelación
+          </div>
+          <svg
+            data-pencil-name="Icono notificaciones"
+            data-icon-name="bell"
+            data-icon-set="lucide"
+            viewBox="0 0 13.99993896484375 14"
+            preserveAspectRatio="xMidYMid meet"
+            xmlns="http://www.w3.org/2000/svg"
+            style="box-sizing: border-box; height: 25px; left: 18px; position: absolute; top: 17px; width: 25px; z-index: 2"
+          >
+            <path
+              d="M6.76074 0.60156q-0.62891 0.02734-1.22363 0.25293-0.59473 0.22217-1.0835 0.62891-0.63232 0.50586-1.03222 1.22705-0.39648 0.72119-0.48194 1.51758-0.01367 0.16748-0.03418 0.70068-0.02051 0.52979-0.0581 0.86817-0.03418 0.33496-0.12988 0.68359-0.09912 0.43408-0.28028 0.78613-0.14014 0.30762-0.29394 0.51953-0.15381 0.2085-0.50586 0.58448-0.22217 0.25293-0.30762 0.38623-0.08203 0.1333-0.12647 0.31445-0.04102 0.14014-0.02734 0.32471 0.01367 0.18115 0.05469 0.30761 0.1709 0.46143 0.60498 0.66993l0.04101 0.02734q0.09912 0.0581 0.28028 0.07178 0.23584 0.01367 1.04931 0.02734l7.5879 0q0.81348-0.01367 1.04931-0.02734 0.18115-0.01367 0.28027-0.07178l0.04102-0.02734q0.43408-0.2085 0.60498-0.66993 0.04102-0.12646 0.05469-0.30761 0.01367-0.18457-0.02735-0.32471-0.04443-0.18115-0.12988-0.32129-0.08203-0.14014-0.3042-0.37939-0.35205-0.37598-0.50586-0.58448-0.15381-0.21191-0.29394-0.51953-0.16748-0.33496-0.2666-0.69726-0.0957-0.36572-0.14014-0.72803-0.04102-0.36572-0.06836-0.9126-0.01367-0.72803-0.08545-1.04932-0.2085-1.08008-0.93652-1.9038-0.72803-0.82715-1.76367-1.1792-0.7417-0.23584-1.54151-0.19483z m0.68701 1.18946q0.46143 0.07178 0.88184 0.28369 0.42041 0.2085 0.7417 0.55713 0.46143 0.46143 0.67334 1.06298 0.0957 0.25293 0.12988 0.49219 0.0376 0.23584 0.05127 0.7417 0.01367 0.58789 0.06836 1.01514 0.05811 0.42725 0.15723 0.84765 0.16748 0.68359 0.46826 1.2168 0.30078 0.5332 0.84766 1.12109l0.19482 0.19483-9.32422 0 0.19482-0.19483q0.54688-0.58789 0.84766-1.12109 0.30078-0.5332 0.46826-1.2168 0.09912-0.42041 0.15381-0.84765 0.05811-0.42725 0.07861-1.01514 0.02051-0.58789 0.06836-0.875 0.05127-0.28711 0.21192-0.63574 0.16064-0.35205 0.46142-0.68701 0.30078-0.33838 0.63575-0.54688 0.60498-0.36572 1.333-0.42041 0.08203-0.01367 0.31104 0 0.23242 0.01367 0.34521 0.02735z m-1.6372 9.89843q-0.22559 0.08545-0.33155 0.28028-0.10254 0.19482-0.04785 0.42041 0.01367 0.08545 0.11963 0.24609 0.10596 0.16065 0.21875 0.27344 0.50244 0.50244 1.23047 0.50244 0.72803 0 1.23047-0.50244 0.11279-0.11279 0.21875-0.27344 0.10596-0.16064 0.11963-0.24609 0.05469-0.19482-0.0376-0.38282-0.08887-0.19141-0.27002-0.29052-0.08545-0.04102-0.25293-0.04102-0.11279 0-0.15381 0.01367-0.04102 0.01367-0.11279 0.04102-0.09912 0.05811-0.18115 0.15723-0.11279 0.15381-0.17774 0.20849-0.06152 0.05469-0.14697 0.09912-0.08203 0.04102-0.23584 0.04102-0.15381 0-0.23926-0.04102-0.08203-0.04443-0.14697-0.09912-0.06152-0.05469-0.17432-0.20849-0.15381-0.19824-0.43408-0.21192-0.14014 0-0.19482 0.01367z"
+              fill="#6D9A77"
+            ></path>
+          </svg>
+        </div>
+        <div
+          data-pencil-name="Monitoreo"
+          style="background-color: #F2F1F8; border-radius: 14px; box-shadow: 0px 3px 10px #12243A12; box-sizing: border-box; height: 125px; left: 280px; outline-offset: -0.75px; outline: 1.5px solid #D0CDDE; position: absolute; top: 490px; width: 210px; z-index: 8"
+        >
+          <div
+            data-pencil-name="Monitoreo título"
+            style="box-sizing: border-box; color: #14243A; font-family: Inter, system-ui, sans-serif; font-size: 16px; font-style: normal; font-weight: 700; left: 54px; letter-spacing: 0px; line-height: normal; position: absolute; text-align: left; top: 18px; width: 138px; z-index: 0"
+          >
+            Monitoreo
+          </div>
+          <div
+            data-pencil-name="Monitoreo detalle"
+            style="box-sizing: border-box; color: #53657C; font-family: Inter, system-ui, sans-serif; font-size: 13px; font-style: normal; font-weight: 400; left: 18px; letter-spacing: 0px; line-height: 18px; position: absolute; text-align: left; top: 55px; width: 174px; z-index: 1"
+          >
+            Errores · disponibilidad
+            <br />
+            Tiempos de respuesta
+          </div>
+          <svg
+            data-pencil-name="Icono monitoreo"
+            data-icon-name="activity"
+            data-icon-set="lucide"
+            viewBox="0 0 13.99993896484375 14"
+            preserveAspectRatio="xMidYMid meet"
+            xmlns="http://www.w3.org/2000/svg"
+            style="box-sizing: border-box; height: 25px; left: 18px; position: absolute; top: 17px; width: 25px; z-index: 2"
+          >
+            <path
+              d="M5.13721 0.60156q-0.0957 0.01367-0.18799 0.05811-0.09229 0.04102-0.19824 0.1333-0.10254 0.08887-0.14698 0.17432-0.04102 0.08203-0.7417 2.57373-0.69727 2.4917-0.73486 2.56347-0.03418 0.06836-0.1333 0.16065-0.0957 0.09229-0.16064 0.11279-0.06152 0.02051-0.21534 0.03418l-1.60986 0.01367-0.08545 0.04102q-0.22217 0.11279-0.30078 0.33838-0.0752 0.22217 0.00684 0.43408 0.05811 0.0957 0.14013 0.18115 0.08545 0.08203 0.16748 0.11963 0.08545 0.03418 0.22559 0.03418l0.76904 0q0.71436 0 0.89551-0.01367 0.18457-0.01367 0.37939-0.08545 0.32129-0.11279 0.60157-0.36914 0.28027-0.25977 0.40674-0.56739 0.04102-0.11279 0.1538-0.49218l0.53321-1.87305q0.33496-1.22021 0.34863-1.22021 0.01367 0 1.40479 4.97998 1.39453 4.97656 1.43554 5.07226 0.07178 0.14014 0.22559 0.25977 0.15381 0.11963 0.32129 0.14697 0.22559 0.02734 0.43408-0.0752 0.21191-0.10596 0.30762-0.3042 0.05811-0.08203 0.74853-2.56005 0.69385-2.47803 0.72803-2.55323 0.0376-0.07861 0.11963-0.16064 0.08545-0.08545 0.18457-0.12988l0.0957-0.04102 1.63721-0.02734q0.12646 0 0.19482-0.03418 0.07178-0.0376 0.15381-0.11963 0.08545-0.08545 0.12647-0.18115 0.04443-0.09912 0.04443-0.22559 0-0.12646-0.04102-0.23926-0.09912-0.19482-0.29394-0.29394l-0.08545-0.04102-0.89551 0q-0.62891 0-0.79297 0-0.16064 0-0.27002 0.02734-0.44775 0.09912-0.81347 0.40674-0.09912 0.08545-0.21875 0.23243-0.11621 0.14697-0.17432 0.27343-0.05469 0.12305-0.15381 0.43408-0.0957 0.30762-0.4751 1.65088-0.43408 1.59619-0.44775 1.59619-0.01367 0-1.41504-4.98339-1.39795-4.98682-1.44238-5.07569-0.04102-0.09229-0.1333-0.18115-0.08887-0.09229-0.17432-0.1333-0.19482-0.11279-0.44775-0.07178z"
+              fill="#8884A6"
+            ></path>
+          </svg>
+        </div>
+        <svg
+          data-pencil-name="Usuarios a interfaz"
+          viewBox="0 0 1280 720"
+          preserveAspectRatio="none"
+          xmlns="http://www.w3.org/2000/svg"
+          style="box-sizing: border-box; height: 720px; left: 0px; overflow: visible; position: absolute; top: 0px; width: 1280px; z-index: 9"
+        >
+          <path d="M235 315 L280 315 M270 309 L280 315 L270 321" fill="#00000000"></path>
+          <path
+            d="M235 315 L280 315 M270 309 L280 315 L270 321"
+            fill="none"
+            stroke="#657A92"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            vector-effect="non-scaling-stroke"
+          ></path>
+        </svg>
+        <svg
+          data-pencil-name="Interfaz a reservas"
+          viewBox="0 0 1280 720"
+          preserveAspectRatio="none"
+          xmlns="http://www.w3.org/2000/svg"
+          style="box-sizing: border-box; height: 720px; left: 0px; overflow: visible; position: absolute; top: 0px; width: 1280px; z-index: 10"
+        >
+          <path d="M490 310 L540 310 M530 304 L540 310 L530 316" fill="#00000000"></path>
+          <path
+            d="M490 310 L540 310 M530 304 L540 310 L530 316"
+            fill="none"
+            stroke="#657A92"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            vector-effect="non-scaling-stroke"
+          ></path>
+        </svg>
+        <svg
+          data-pencil-name="Reservas a base de datos"
+          viewBox="0 0 1280 720"
+          preserveAspectRatio="none"
+          xmlns="http://www.w3.org/2000/svg"
+          style="box-sizing: border-box; height: 720px; left: 0px; overflow: visible; position: absolute; top: 0px; width: 1280px; z-index: 11"
+        >
+          <path d="M800 275 L900 275 M890 269 L900 275 L890 281" fill="#00000000"></path>
+          <path
+            d="M800 275 L900 275 M890 269 L900 275 L890 281"
+            fill="none"
+            stroke="#657A92"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            vector-effect="non-scaling-stroke"
+          ></path>
+        </svg>
+        <svg
+          data-pencil-name="Reservas consulta permisos"
+          viewBox="0 0 1280 720"
+          preserveAspectRatio="none"
+          xmlns="http://www.w3.org/2000/svg"
+          style="box-sizing: border-box; height: 720px; left: 0px; overflow: visible; position: absolute; top: 0px; width: 1280px; z-index: 12"
+        >
+          <path d="M670 355 L670 395 M664 385 L670 395 L676 385" fill="#00000000"></path>
+          <path
+            d="M670 355 L670 395 M664 385 L670 395 L676 385"
+            fill="none"
+            stroke="#657A92"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            vector-effect="non-scaling-stroke"
+          ></path>
+        </svg>
+        <svg
+          data-pencil-name="Reservas a notificaciones"
+          viewBox="0 0 1280 720"
+          preserveAspectRatio="none"
+          xmlns="http://www.w3.org/2000/svg"
+          style="box-sizing: border-box; height: 720px; left: 0px; overflow: visible; position: absolute; top: 0px; width: 1280px; z-index: 13"
+        >
+          <path
+            d="M800 330 L835 330 L835 520 L900 520 M890 514 L900 520 L890 526"
+            fill="#00000000"
+          ></path>
+          <path
+            d="M800 330 L835 330 L835 520 L900 520 M890 514 L900 520 L890 526"
+            fill="none"
+            stroke="#657A92"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            vector-effect="non-scaling-stroke"
+          ></path>
+        </svg>
+        <svg
+          data-pencil-name="Monitoreo a servicios"
+          viewBox="0 0 1280 720"
+          preserveAspectRatio="none"
+          xmlns="http://www.w3.org/2000/svg"
+          style="box-sizing: border-box; height: 720px; left: 0px; overflow: visible; position: absolute; top: 0px; width: 1280px; z-index: 14"
+        >
+          <path
+            d="M490 552 L515 552 L515 310 M530 269 L540 275 L530 281"
+            fill="#00000000"
+          ></path>
+          <path
+            d="M490 552 L515 552 L515 310 M530 269 L540 275 L530 281"
+            fill="none"
+            stroke="#657A92"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            vector-effect="non-scaling-stroke"
+          ></path>
+        </svg>
+        <div
+          data-pencil-name="Leyenda base de datos"
+          style="box-sizing: border-box; color: #607086; font-family: Inter, system-ui, sans-serif; font-size: 12px; font-style: normal; font-weight: 400; left: 900px; letter-spacing: 0px; line-height: normal; position: absolute; text-align: left; top: 378px; width: 280px; z-index: 15"
+        >
+          ⓘ La base de datos garantiza que no se guarden reservas superpuestas.
+        </div>
+        <div
+          data-pencil-name="Nota de permisos"
+          style="box-sizing: border-box; color: #607086; font-family: Inter, system-ui, sans-serif; font-size: 12px; font-style: normal; font-weight: 400; left: 540px; letter-spacing: 0px; line-height: normal; position: absolute; text-align: left; top: 555px; width: 300px; z-index: 16"
+        >
+          ⓘ La autorización se verifica en el servidor, no solo ocultando opciones en pantalla.
+        </div>
+        <div
+          data-pencil-name="Capa · 01 · ACTORES"
+          style="box-sizing: border-box; color: #718198; font-family: Inter, system-ui, sans-serif; font-size: 12px; font-style: normal; font-weight: 700; left: 40px; letter-spacing: 0.6px; line-height: normal; position: absolute; text-align: left; top: 139px; width: 195px; z-index: 17"
+        >
+          01 · ACTORES
+        </div>
+        <div
+          data-pencil-name="Capa · 02 · PRESENTACIÓN"
+          style="box-sizing: border-box; color: #718198; font-family: Inter, system-ui, sans-serif; font-size: 12px; font-style: normal; font-weight: 700; left: 280px; letter-spacing: 0.6px; line-height: normal; position: absolute; text-align: left; top: 139px; width: 210px; z-index: 18"
+        >
+          02 · PRESENTACIÓN
+        </div>
+        <div
+          data-pencil-name="Capa · 03 · LÓGICA / SERVICIOS"
+          style="box-sizing: border-box; color: #718198; font-family: Inter, system-ui, sans-serif; font-size: 12px; font-style: normal; font-weight: 700; left: 540px; letter-spacing: 0.6px; line-height: normal; position: absolute; text-align: left; top: 139px; width: 260px; z-index: 19"
+        >
+          03 · LÓGICA / SERVICIOS
+        </div>
+        <div
+          data-pencil-name="Capa · 04 · PERSISTENCIA E INFRAESTRUCTURA"
+          style="box-sizing: border-box; color: #718198; font-family: Inter, system-ui, sans-serif; font-size: 12px; font-style: normal; font-weight: 700; left: 900px; letter-spacing: 0.6px; line-height: normal; position: absolute; text-align: left; top: 139px; width: 280px; z-index: 20"
+        >
+          04 · PERSISTENCIA E INFRAESTRUCTURA
+        </div>
+      </div>
+    </div>
+  </main>
+  <script>
+    const viewport = document.querySelector('.diagram-viewport');
+    const resizeDiagram = () => viewport.style.setProperty('--diagram-scale', Math.min(1, viewport.clientWidth / 1280));
+    resizeDiagram();
+    new ResizeObserver(resizeDiagram).observe(viewport);
+  </script>
+  </body>
+</html>

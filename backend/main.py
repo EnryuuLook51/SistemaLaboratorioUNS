@@ -1,18 +1,20 @@
-"""API HTTP para el prototipo de reserva de laboratorios UNS."""
+"""API HTTP para reserva de laboratorios UNS."""
 
 import logging
 import os
+import secrets
 import sqlite3
 import time
 from contextlib import asynccontextmanager
 from datetime import date, timedelta
 from typing import Annotated
 
-from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request
+from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field, model_validator
 
 from .database import get_db, init_db
+from .auth import COOKIE_NAME, DUMMY_HASH, SESSION_SECONDS, token_hash, verify_password
 
 Db = Annotated[sqlite3.Connection, Depends(get_db)]
 logger = logging.getLogger("reservas")
@@ -24,12 +26,19 @@ async def lifespan(_: FastAPI):
     yield
 
 
-app = FastAPI(title="Reserva de Laboratorios · UNS", version="0.1.0", lifespan=lifespan)
+def csrf_guard(request: Request, x_requested_with: Annotated[str | None, Header()] = None):
+    # Este header no simple exige preflight: un sitio ajeno no puede enviar mutaciones con cookies.
+    if request.method not in ("GET", "HEAD", "OPTIONS") and x_requested_with != "XMLHttpRequest":
+        raise HTTPException(403, "Solicitud no autorizada: falta la protección CSRF")
+
+
+app = FastAPI(title="Reserva de Laboratorios · UNS", version="0.2.0", lifespan=lifespan, dependencies=[Depends(csrf_guard)])
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_credentials=True,
     allow_methods=["GET", "POST", "PATCH"],
-    allow_headers=["Content-Type", "X-Demo-User"],
+    allow_headers=["Content-Type", "X-Requested-With"],
 )
 
 
@@ -37,6 +46,7 @@ app.add_middleware(
 async def log_requests(request: Request, call_next):
     start = time.perf_counter()
     response = await call_next(request)
+    response.headers["Cache-Control"] = "no-store"
     logger.info("%s %s %s %.1fms", request.method, request.url.path, response.status_code, (time.perf_counter() - start) * 1000)
     return response
 
@@ -59,23 +69,72 @@ def all_rows(db: sqlite3.Connection, query: str, args: tuple = ()) -> list[dict]
 def actor(
     db: Db,
     request: Request,
-    x_demo_user: Annotated[str | None, Header(description="Código de usuario demo; solo en modo local")] = None,
 ) -> dict:
-    if os.environ.get("DEMO_MODE") != "1":
-        fail(503, "Autenticación institucional pendiente. Inicia la API en modo demo local para pruebas.")
-    if request.client is None or request.client.host not in ("127.0.0.1", "::1", "localhost", "testclient"):
-        fail(403, "El modo demo solo admite acceso local")
-    if not x_demo_user:
-        fail(401, "Indica X-Demo-User: DOC001, DEL001, ADM001 o COO001")
+    token = request.cookies.get(COOKIE_NAME)
+    if not token:
+        fail(401, "Inicia sesión para acceder a la aplicación")
     row = db.execute(
-        "SELECT * FROM usuarios WHERE codigo_institucional=? AND activo=1", (x_demo_user,)
+        """SELECT u.* FROM sesiones s JOIN usuarios u ON u.id=s.usuario_id
+           WHERE s.token_hash=? AND s.expira_en>? AND u.activo=1""",
+        (token_hash(token), int(time.time())),
     ).fetchone()
     if row is None:
-        fail(401, "Usuario demo desconocido o inactivo")
+        fail(401, "Tu sesión venció. Vuelve a iniciar sesión")
     return dict(row)
 
 
 Actor = Annotated[dict, Depends(actor)]
+
+
+def public_user(user: dict) -> dict:
+    return {key: user[key] for key in ("id", "codigo_institucional", "nombre", "correo", "rol")}
+
+
+class LoginData(BaseModel):
+    identificador: str = Field(min_length=1, max_length=254)
+    password: str = Field(min_length=1, max_length=256)
+
+
+@app.post("/auth/login", tags=["Autenticación"])
+def login(data: LoginData, db: Db, request: Request, response: Response):
+    identifier = data.identificador.strip().lower()
+    now = int(time.time())
+    key = token_hash(f"{request.client.host if request.client else ''}:{identifier}")
+    attempt = db.execute("SELECT * FROM intentos_login WHERE clave=? AND expira_en>?", (key, now)).fetchone()
+    if attempt and attempt["fallos"] >= 5:
+        raise HTTPException(429, "Demasiados intentos. Vuelve a intentar en 5 minutos", headers={"Retry-After": str(attempt["expira_en"] - now)})
+    row = db.execute(
+        "SELECT * FROM usuarios WHERE lower(codigo_institucional)=? OR lower(correo)=?", (identifier, identifier)
+    ).fetchone()
+    valid = verify_password(data.password, row["password_hash"] if row and row["password_hash"] else DUMMY_HASH)
+    if not valid or row is None or not row["activo"]:
+        with db:
+            db.execute("DELETE FROM intentos_login WHERE expira_en<=?", (now,))
+            db.execute("""INSERT INTO intentos_login(clave,fallos,expira_en) VALUES (?,1,?)
+                          ON CONFLICT(clave) DO UPDATE SET fallos=fallos+1""", (key, now + 300))
+        fail(401, "Código o correo y contraseña incorrectos")
+    token = secrets.token_urlsafe(32)
+    with db:
+        db.execute("DELETE FROM intentos_login WHERE clave=? OR expira_en<=?", (key, now))
+        db.execute("DELETE FROM sesiones WHERE expira_en<=?", (now,))
+        # Un nuevo login reemplaza la sesión de este navegador, no las de otros equipos.
+        previous = request.cookies.get(COOKIE_NAME)
+        if previous:
+            db.execute("DELETE FROM sesiones WHERE token_hash=?", (token_hash(previous),))
+        db.execute("INSERT INTO sesiones(token_hash,usuario_id,expira_en) VALUES (?,?,?)", (token_hash(token), row["id"], now + SESSION_SECONDS))
+    response.set_cookie(COOKIE_NAME, token, max_age=SESSION_SECONDS, httponly=True,
+                        secure=os.environ.get("COOKIE_SECURE") == "1", samesite="lax", path="/")
+    return public_user(dict(row))
+
+
+@app.post("/auth/logout", tags=["Autenticación"])
+def logout(db: Db, request: Request, response: Response):
+    token = request.cookies.get(COOKIE_NAME)
+    if token:
+        with db:
+            db.execute("DELETE FROM sesiones WHERE token_hash=?", (token_hash(token),))
+    response.delete_cookie(COOKIE_NAME, path="/")
+    return {"mensaje": "Sesión cerrada"}
 
 
 def permit(db: sqlite3.Connection, user: dict, allowed: bool, operation: str) -> None:
@@ -202,7 +261,7 @@ def users(db: Db, user: Actor):
 
 @app.get("/usuarios/me", tags=["Sistema"])
 def me(db: Db, user: Actor):
-    return {key: user[key] for key in ("id", "codigo_institucional", "nombre", "correo", "rol")}
+    return public_user(user)
 
 
 @app.get("/cursos", tags=["Catálogo"])

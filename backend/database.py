@@ -31,6 +31,9 @@ def init_db() -> None:
         if db.execute("PRAGMA user_version").fetchone()[0] < 2:
             db.executescript((ROOT / "db" / "migrations" / "002_autorizaciones.sql").read_text())
             db.execute("PRAGMA user_version = 2")
+        if db.execute("PRAGMA user_version").fetchone()[0] < 3:
+            db.executescript((ROOT / "db" / "migrations" / "003_autenticacion.sql").read_text())
+            db.execute("PRAGMA user_version = 3")
         db.execute("PRAGMA journal_mode = WAL")
 
 

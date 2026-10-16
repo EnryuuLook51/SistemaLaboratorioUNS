@@ -52,11 +52,11 @@ Espera hasta que aparezca `Uvicorn running on http://127.0.0.1:8000`. Abre **htt
 
 El primer inicio muestra **tres reservas confirmadas y dos solicitudes pendientes** en la semana actual. SQLite guarda todos los cambios; recargar la página no restablece los ejemplos. Si ya hay reservas, el arranque conserva esa programación.
 
-La documentación interactiva de API está en **http://127.0.0.1:8000/api/docs**. Sus operaciones protegidas requieren `X-Demo-User` con uno de los códigos siguientes.
+La documentación interactiva de API está en **http://127.0.0.1:8000/api/docs**. Sus operaciones protegidas usan la sesión del navegador. Para POST/PATCH introduce `XMLHttpRequest` en el campo `x-requested-with` de Swagger.
 
 ## 3. Perfiles disponibles
 
-Usa el selector «Perfil» de la barra «Prueba local».
+Ingresa desde el login con un código de la tabla y la contraseña inicial **`Uns2026!`**. También se admite el correo de la cuenta. Para cambiar de rol, pulsa **Cerrar sesión** y vuelve a ingresar. Si se configuró `DEMO_PASSWORD` antes del primer inicio, usa esa contraseña en lugar de la predeterminada.
 
 | Código | Persona / rol | Qué probar |
 | --- | --- | --- |
@@ -112,7 +112,7 @@ Esta prueba manual demuestra el rechazo de un cruce. La comprobación de solicit
 
 **Resultado esperado:** el formulario ofrece solo la delegación autorizada. Pie: *El delegado registra solicitudes en representación de un curso y docente autorizado.*
 
-Para demostrar una prohibición en el servidor, abre `/api/docs`, usa `POST /reservas/{reservation_id}/aprobar`, el ID de una solicitud pendiente y `X-Demo-User: DOC001`. Captura **403 / «No tienes permiso para esta operación»**. Ocultar un botón en la interfaz por sí solo no demuestra autorización del backend.
+Para demostrar una prohibición en el servidor, inicia sesión como `DOC001` y abre `/api/docs` en el mismo navegador. Usa `POST /reservas/{reservation_id}/aprobar`, el ID de una solicitud pendiente y `XMLHttpRequest` en `x-requested-with`. Captura **403 / «No tienes permiso para esta operación»**. Ocultar un botón en la interfaz por sí solo no demuestra autorización del backend.
 
 ### Captura 06 — Modificación o cancelación
 
@@ -145,7 +145,7 @@ Desde otra terminal en la raíz del repositorio:
 uv run --locked --extra test pytest -q
 ```
 
-Captura la salida de la ejecución y anota el resultado que obtengas. Las seis pruebas actuales verifican flujo, conflictos, autorizaciones, catálogo, confirmaciones simultáneas y privacidad de la agenda compartida. Usan una base temporal y no alteran la programación de tus capturas.
+Captura la salida de la ejecución y anota el resultado que obtengas. Las pruebas verifican login, sesiones, límites de intentos, protección CSRF, flujo, conflictos, autorizaciones, catálogo, confirmaciones simultáneas y privacidad de la agenda compartida. Usan una base temporal y no alteran la programación de tus capturas.
 
 ## 5. Repetir pruebas desde una base nueva
 

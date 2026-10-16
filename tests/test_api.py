@@ -12,14 +12,21 @@ from backend.seed import seed
 @pytest.fixture
 def client(tmp_path, monkeypatch):
     monkeypatch.setenv("RESERVAS_DB", str(tmp_path / "reservas.sqlite3"))
-    monkeypatch.setenv("DEMO_MODE", "1")
+    monkeypatch.setenv("DEMO_PASSWORD", "Uns2026!")
     seed()
     with TestClient(app, base_url="http://localhost") as test_client:
+        test_client.tokens = {}
+        for code in ("DOC001", "DEL001", "ADM001", "COO001"):
+            response = test_client.post("/auth/login", headers={"X-Requested-With": "XMLHttpRequest"},
+                                        json={"identificador": code, "password": "Uns2026!"})
+            assert response.status_code == 200
+            test_client.tokens[code] = response.cookies["uns_session"]
+            test_client.cookies.clear()
         yield test_client
 
 
 def call(client, method, path, who="DOC001", **kwargs):
-    return client.request(method, path, headers={"X-Demo-User": who}, **kwargs)
+    return client.request(method, path, headers={"Cookie": f"uns_session={client.tokens[who]}", "X-Requested-With": "XMLHttpRequest"}, **kwargs)
 
 
 def request_payload(**changes):
@@ -101,11 +108,10 @@ def test_simultaneous_approvals(client):
     assert sorted(results) == [200, 409]
 
 
-def test_no_demo_authentication(tmp_path, monkeypatch):
+def test_demo_header_no_longer_authenticates(tmp_path, monkeypatch):
     monkeypatch.setenv("RESERVAS_DB", str(tmp_path / "reservas.sqlite3"))
-    monkeypatch.delenv("DEMO_MODE", raising=False)
     with TestClient(app, base_url="http://localhost") as client:
-        assert client.get("/laboratorios", headers={"X-Demo-User": "ADM001"}).status_code == 503
+        assert client.get("/laboratorios", headers={"X-Demo-User": "ADM001"}).status_code == 401
 
 
 def test_shared_schedule_hides_other_users_and_pending_requests(client):

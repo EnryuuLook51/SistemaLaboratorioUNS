@@ -34,14 +34,14 @@ El script instala dependencias, compila el frontend, prepara SQLite y sirve todo
 Para volver a iniciar sin instalar ni compilar:
 
 ```bash
-DEMO_MODE=1 uv run uvicorn backend.web:app --host 127.0.0.1 --port 8000
+uv run uvicorn backend.web:app --host 127.0.0.1 --port 8000
 ```
 
 El seed conserva los datos existentes. Si aún no hay reservas, `--agenda` añade cinco actividades de ejemplo para la semana actual, tres confirmadas y dos pendientes. Son registros reales de demostración en SQLite, no cifras simuladas en el frontend.
 
 ## Prueba manual del flujo
 
-En la barra «Prueba local» puedes elegir el perfil:
+La aplicación abre en la pantalla de **inicio de sesión**. Ingresa un código de la tabla o su correo de ejemplo y la contraseña inicial **`Uns2026!`**. Para probar otro rol, pulsa **Cerrar sesión** e ingresa con otra cuenta.
 
 | Código | Perfil | Acciones |
 | --- | --- | --- |
@@ -52,14 +52,20 @@ En la barra «Prueba local» puedes elegir el perfil:
 
 1. Como **docente**, pulsa una hora de la agenda, elige laboratorio y curso, y envía una solicitud. La disponibilidad se consulta automáticamente; una solicitud pendiente todavía no ocupa la franja.
 2. Ve a **Mis solicitudes** para comprobar el estado pendiente.
-3. Cambia a **administrador**, abre **Solicitudes** y aprueba la reserva. Ahora aparece en el horario semanal compartido.
+3. Cierra sesión e ingresa como **administrador**, abre **Solicitudes** y aprueba la reserva. Ahora aparece en el horario semanal compartido.
 4. Para probar concurrencia manual: crea **dos solicitudes cruzadas antes de aprobarlas**, en el mismo laboratorio. Aprueba una; al intentar aprobar la otra verás «El horario ya no está disponible» (HTTP 409).
 5. Vuelve al perfil docente para editar o cancelar la reserva. Los cambios se guardan en SQLite, se registran en el historial y generan notificaciones.
 6. Como administrador, añade un laboratorio desde **Laboratorios** o registra mantenimiento con **Bloquear horario**. No puede cruzar una reserva confirmada.
 
 El calendario distribuye actividades coincidentes de diferentes laboratorios en columnas dentro del mismo día. Para inspeccionar un único espacio, usa el filtro de laboratorio. En móvil se muestra un día seleccionable a la vez, incluidos sábado y domingo.
 
-`DEMO_MODE=1` es un acceso de prueba local con `X-Demo-User`; la autenticación institucional todavía está pendiente. La base vive en `data/reservas.sqlite3`. Puedes usar otra sin tocarla con `RESERVAS_DB=/ruta/a/otra.sqlite3`, tanto para el seed como para el servidor.
+Las cuentas de la tabla son de **demostración académica**, no cuentas institucionales reales. El seed asigna contraseñas solo si todavía no existen; no sobrescribe credenciales ni reservas. Puedes definir `DEMO_PASSWORD` antes del primer seed para usar otra contraseña inicial.
+
+El backend verifica contraseñas con **scrypt**, limita intentos fallidos y guarda sesiones de 8 horas en SQLite. La cookie de sesión es **HttpOnly**; cerrar sesión revoca el acceso. Los permisos siguen validándose en cada operación y ya no se acepta `X-Demo-User`. Las mutaciones de API requieren el header `X-Requested-With: XMLHttpRequest` (incluido automáticamente por el frontend; introdúcelo también en Swagger).
+
+La base vive en `data/reservas.sqlite3`. Puedes usar otra con `RESERVAS_DB=/ruta/a/otra.sqlite3`, tanto para el seed como para el servidor. La migración `003_autenticacion.sql` actualiza bases existentes sin borrar sus datos. Si arrancas directamente con uvicorn tras actualizar una base antigua, ejecuta primero `uv run python -m backend.seed` para asignar las contraseñas iniciales.
+
+**Antes de publicar:** sustituye las cuentas de ejemplo por credenciales individuales, configura HTTPS y `COOKIE_SECURE=1`, y acuerda la integración institucional, la recuperación y la administración de contraseñas. Esta versión no incluye SSO ni recuperación por correo.
 
 ## Desarrollo con recarga automática
 
@@ -69,7 +75,7 @@ En dos terminales, desde la raíz del repositorio:
 # Terminal 1: API
 uv sync --extra test
 uv run python -m backend.seed --agenda
-DEMO_MODE=1 uv run uvicorn backend.main:app --reload --host 127.0.0.1 --port 8000
+uv run uvicorn backend.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
 ```bash
@@ -112,7 +118,6 @@ Las pruebas de API y navegador usan bases temporales. Para repetir el recorrido 
 
 - [Dirección visual](docs/direccion-visual.md) y [stack](docs/stack.md).
 - [Guía para pruebas y capturas](docs/guia-companero.md) y [diagrama de arquitectura](docs/diagrama-estatico.html).
-- [Frontend](frontend/src/App.tsx), [agenda](frontend/src/Calendar.tsx), [formulario](frontend/src/Booking.tsx) y [estilos](frontend/src/style.css).
+- [Inicio de sesión](frontend/src/Login.tsx), [frontend](frontend/src/App.tsx), [agenda](frontend/src/Calendar.tsx), [formulario](frontend/src/Booking.tsx) y [estilos](frontend/src/style.css).
 - [API](backend/main.py) y [servidor integrado](backend/web.py).
-- [Esquema SQLite](db/schema.sql) y [migración de autorizaciones](db/migrations/002_autorizaciones.sql).
-- [Prototipos HTML previos](prototypes/index.html).
+- [Esquema SQLite](db/schema.sql), [migración de autorizaciones](db/migrations/002_autorizaciones.sql) y [autenticación](db/migrations/003_autenticacion.sql).

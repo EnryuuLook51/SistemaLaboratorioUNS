@@ -9,7 +9,6 @@ function Invoke-Checked {
 }
 
 Push-Location $PSScriptRoot
-$PreviousDemoMode = $env:DEMO_MODE
 try {
     if (-not (Get-Command uv -ErrorAction SilentlyContinue)) {
         throw "Instala uv siguiendo docs/guia-companero.md y vuelve a abrir PowerShell."
@@ -21,10 +20,8 @@ try {
     Invoke-Checked "npm.cmd" @("--prefix", "frontend", "ci")
     Invoke-Checked "npm.cmd" @("--prefix", "frontend", "run", "build")
     Invoke-Checked "uv" @("run", "--locked", "python", "-m", "backend.seed", "--agenda")
-    $env:DEMO_MODE = "1"
     & uv run --locked uvicorn backend.web:app --host 127.0.0.1 --port 8000
 }
 finally {
-    $env:DEMO_MODE = $PreviousDemoMode
     Pop-Location
 }

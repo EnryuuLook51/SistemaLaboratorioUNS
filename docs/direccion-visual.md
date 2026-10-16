@@ -10,7 +10,6 @@
 | `2.png` | Excelente mapa de calor para percibir demanda y ocupación general. | Reservarlo para reportes: sus porcentajes no muestran qué laboratorio y franja están libres. |
 | `3.png` | Tono cálido y universitario. | Buena inspiración editorial, pero dedica demasiado espacio a la bienvenida para una tarea centrada en horarios. |
 | `4.png` | Calendario similar al de la 1, acompañado de aprobaciones y métricas. | Inspiración para la vista administrativa; tiene más información simultánea de la que necesita un docente al reservar. |
-| `../prototypes/01-panel-academico.html` | Paleta clara y flujo docente. | Adaptar su lista de laboratorios para incorporar el horario semanal de `1.png`. |
 
 ## Cómo llevarla a la aplicación
 

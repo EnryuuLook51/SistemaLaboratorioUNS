@@ -5,7 +5,7 @@ import type { Lab, Reservation } from './types'
 import Modal from './Modal'
 import { today } from './dates'
 
-export function EditReservation({ code, reservation, labs, onClose, onSaved }: { code: string; reservation: Reservation; labs: Lab[]; onClose: () => void; onSaved: () => void }) {
+export function EditReservation({ reservation, labs, onClose, onSaved }: { reservation: Reservation; labs: Lab[]; onClose: () => void; onSaved: () => void }) {
   const [form, setForm] = useState({ laboratorio_id: String(reservation.laboratorio_id), fecha: reservation.fecha, inicio: reservation.inicio, fin: reservation.fin, participantes: String(reservation.participantes) })
   const [error, setError] = useState(''); const [saving, setSaving] = useState(false)
   const selected = labs.find(lab => lab.id === Number(form.laboratorio_id))
@@ -14,7 +14,7 @@ export function EditReservation({ code, reservation, labs, onClose, onSaved }: {
     if (form.inicio >= form.fin) { setError('El término debe ser posterior al inicio.'); return }
     setSaving(true)
     try {
-      await api(`/reservas/${reservation.id}`, code, { method: 'PATCH', body: JSON.stringify({ ...form, laboratorio_id: Number(form.laboratorio_id), participantes: Number(form.participantes) }) })
+      await api(`/reservas/${reservation.id}`, { method: 'PATCH', body: JSON.stringify({ ...form, laboratorio_id: Number(form.laboratorio_id), participantes: Number(form.participantes) }) })
       onSaved()
     } catch (error) { setError((error as Error).message) } finally { setSaving(false) }
   }
@@ -29,13 +29,13 @@ export function EditReservation({ code, reservation, labs, onClose, onSaved }: {
   </form></Modal>
 }
 
-export function LabForm({ code, lab, onClose, onSaved }: { code: string; lab?: Lab; onClose: () => void; onSaved: () => void }) {
+export function LabForm({ lab, onClose, onSaved }: { lab?: Lab; onClose: () => void; onSaved: () => void }) {
   const [error, setError] = useState(''); const [saving, setSaving] = useState(false)
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault(); const data = new FormData(event.currentTarget)
     const body = { nombre: data.get('nombre'), ubicacion: data.get('ubicacion'), capacidad: Number(data.get('capacidad')), equipos: data.get('equipos'), ...(lab ? { activo: data.get('activo') === 'on' } : { codigo: data.get('codigo') }) }
     setSaving(true); setError('')
-    try { await api(lab ? `/laboratorios/${lab.id}` : '/laboratorios', code, { method: lab ? 'PATCH' : 'POST', body: JSON.stringify(body) }); onSaved() }
+    try { await api(lab ? `/laboratorios/${lab.id}` : '/laboratorios', { method: lab ? 'PATCH' : 'POST', body: JSON.stringify(body) }); onSaved() }
     catch (error) { setError((error as Error).message) } finally { setSaving(false) }
   }
   return <Modal title={lab ? 'Editar laboratorio' : 'Nuevo laboratorio'} onClose={onClose}><form className="stack-form" onSubmit={submit}>
@@ -49,13 +49,13 @@ export function LabForm({ code, lab, onClose, onSaved }: { code: string; lab?: L
   </form></Modal>
 }
 
-export function BlockForm({ code, labs, onClose, onSaved }: { code: string; labs: Lab[]; onClose: () => void; onSaved: () => void }) {
+export function BlockForm({ labs, onClose, onSaved }: { labs: Lab[]; onClose: () => void; onSaved: () => void }) {
   const [error, setError] = useState(''); const [saving, setSaving] = useState(false)
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault(); const data = new FormData(event.currentTarget)
     if (String(data.get('inicio')) >= String(data.get('fin'))) { setError('El término debe ser posterior al inicio.'); return }
     setSaving(true); setError('')
-    try { await api('/bloqueos', code, { method: 'POST', body: JSON.stringify({ laboratorio_id: Number(data.get('laboratorio_id')), fecha: data.get('fecha'), inicio: data.get('inicio'), fin: data.get('fin'), motivo: data.get('motivo') }) }); onSaved() }
+    try { await api('/bloqueos', { method: 'POST', body: JSON.stringify({ laboratorio_id: Number(data.get('laboratorio_id')), fecha: data.get('fecha'), inicio: data.get('inicio'), fin: data.get('fin'), motivo: data.get('motivo') }) }); onSaved() }
     catch (error) { setError((error as Error).message) } finally { setSaving(false) }
   }
   return <Modal title="Bloquear horario" onClose={onClose}><form className="stack-form" onSubmit={submit}><p className="muted">Reserva una franja para mantenimiento. No puede cruzar una clase confirmada.</p>

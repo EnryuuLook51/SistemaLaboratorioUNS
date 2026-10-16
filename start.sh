@@ -7,5 +7,4 @@ uv sync --locked
 npm --prefix frontend ci
 npm --prefix frontend run build
 uv run --locked python -m backend.seed --agenda
-export DEMO_MODE=1
 exec uv run --locked uvicorn backend.web:app --host 127.0.0.1 --port 8000

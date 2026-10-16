@@ -1,0 +1,70 @@
+.auth-loading { min-height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; padding: 24px; text-align: center; }
+.auth-loading h1 { font-size: 28px; }
+.auth-loading p { max-width: 450px; line-height: 1.6; }
+.login-page { min-height: 100dvh; display: grid; grid-template-columns: 1fr 1fr; background: #fff; }
+.login-story { display: flex; flex-direction: column; background: #edf3fa; padding: 44px clamp(32px, 5vw, 88px); position: relative; overflow: hidden; }
+.login-story .brand { padding: 0; }
+.login-story-content { margin-block: auto; padding-block: 70px; position: relative; max-width: 490px; }
+.login-kicker { color: #6885a6; font-size: 10px; font-weight: 700; letter-spacing: .12em; }
+.login-story h2 { font-size: clamp(36px, 4vw, 58px); line-height: 1.12; letter-spacing: -.045em; color: #294b73; margin-top: 22px; }
+.login-story-content > p { color: #7388a2; font-size: 15px; line-height: 1.8; margin-top: 24px; max-width: 370px; text-wrap: pretty; }
+.login-preview { margin-top: 42px; background: #ffffffc9; border: 1px solid #dce6f1; border-radius: 16px; box-shadow: 0 15px 40px #325d8a08; overflow: hidden; }
+.login-preview-heading { display: flex; align-items: center; gap: 10px; font-size: 12px; font-weight: 600; padding: 20px; border-bottom: 1px solid #e5edf5; }
+.login-preview-heading > .status-dot { margin-left: auto; }
+.login-preview-grid { display: grid; grid-template-columns: 39px 1fr; gap: 14px 10px; padding: 22px 18px; align-items: center; }
+.login-preview-grid > span { color: #94a4b8; font-size: 10px; font-variant-numeric: tabular-nums; }
+.login-preview-event { background: #e5effa; border-left: 3px solid #8aafd4; border-radius: 7px; padding: 18px 14px; display: flex; align-items: center; gap: 12px; color: #557da6; }
+.login-preview-event strong { display: block; font-size: 11px; font-weight: 600; }
+.login-preview-event small { display: block; font-size: 9px; line-height: 1.6; margin-top: 6px; color: #7d95af; }
+.login-preview-event > svg:last-child { margin-left: auto; }
+.login-preview-free { border: 1px dashed #d6e2ef; border-radius: 7px; padding: 20px 12px; font-size: 10px; color: #97a9be; }
+.login-preview-footer { display: flex; align-items: center; gap: 7px; padding: 14px 20px; border-top: 1px solid #e5edf5; font-size: 10px; color: #7790ab; }
+.login-campus { color: #879bb3; font-size: 9px; letter-spacing: .06em; line-height: 1.8; }
+.login-campus span { display: block; font-size: 11px; letter-spacing: 0; }
+.login-access { display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 64px 40px 28px; }
+.login-card { width: 100%; max-width: 370px; margin-block: auto; padding-block: 24px; }
+.login-lock { width: 52px; height: 52px; border-radius: 14px; background: #f0f5fb; color: #688bb0; display: grid; place-items: center; margin-bottom: 32px; }
+.login-card h1 { font-size: 29px; letter-spacing: -.04em; line-height: 1.3; }
+.login-intro { margin-top: 12px; font-size: 13px; color: #8394aa; line-height: 1.7; }
+.login-form { display: grid; gap: 10px; margin-top: 32px; }
+.login-form > label { font-size: 12px; font-weight: 600; color: #59718e; }
+.login-form > label:not(:first-child) { margin-top: 10px; }
+.login-form input { width: 100%; background: #fbfcfe; border: 1px solid #dfe7f0; border-radius: 9px; padding: 14px; min-height: 49px; font-size: 16px; }
+.login-form input::placeholder { font-size: 12px; color: #9aaabd; }
+.login-password { position: relative; }
+.login-password input { padding-right: 49px; }
+.login-password button { position: absolute; top: 5px; right: 5px; width: 40px; height: 40px; }
+.login-form .login-submit { min-height: 49px; margin-top: 14px; font-size: 13px; justify-content: space-between; padding-inline: 18px; }
+.login-notice { padding: 12px; background: #eef5fc; border-radius: 8px; font-size: 12px; color: #5e7da0; line-height: 1.6; }
+.login-security { display: flex; align-items: center; gap: 9px; color: #98a6b8; font-size: 10px; line-height: 1.6; margin-top: 22px; }
+.login-demo { margin-top: 32px; border-top: 1px solid #edf1f6; padding-top: 20px; color: #8799af; font-size: 11px; line-height: 1.8; }
+.login-demo summary { cursor: pointer; padding-block: 5px; }
+.login-demo summary:focus-visible { outline: 3px solid #91b5e0; outline-offset: 3px; }
+.login-demo p { margin-top: 12px; }
+.login-demo strong { font-weight: 600; color: #607d9c; }
+.login-demo code { color: #315f96; background: #f0f5fb; padding: 2px 5px; border-radius: 4px; }
+.login-access-footer { font-size: 10px; color: #a0aec0; padding-top: 40px; }
+.session-bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; background: #edf3fa; border: 1px solid #e0e9f3; border-radius: 10px; padding: 9px 14px; margin-bottom: 23px; font-size: 12px; color: #5d7b9c; }
+.session-bar > span { display: flex; align-items: center; flex-wrap: wrap; gap: 9px; }
+.session-bar strong { font-weight: 600; }
+.session-role { font-size: 11px; color: #8498b0; }
+.session-bar .quiet { display: flex; align-items: center; gap: 7px; flex-shrink: 0; min-height: 40px; }
+.login-page button { user-select: none; -webkit-user-select: none; }
+.login-page button:active:enabled { filter: brightness(.93); }
+@media (hover: hover) and (pointer: fine) { .login-demo summary:hover { color: #315f96; } }
+@media (max-width: 1000px) { .login-story { padding-inline: 32px; } .login-preview-event { gap: 8px; padding-inline: 10px; } }
+@media (max-width: 760px) {
+  .login-page { grid-template-columns: 1fr; }
+  .login-story { padding: calc(24px + env(safe-area-inset-top, 0px)) 24px 22px; }
+  .login-story-content, .login-campus { display: none; }
+  .login-story .brand { font-size: 16px; }
+  .login-access { padding: 34px 24px calc(22px + env(safe-area-inset-bottom, 0px)); }
+  .login-card { padding-block: 0; }
+  .login-lock { margin-bottom: 24px; }
+  .login-card h1 { font-size: 27px; }
+  .login-access-footer { padding-top: 36px; }
+  .session-bar { padding: 7px 9px; margin-bottom: 17px; }
+  .session-bar > span { gap: 5px; font-size: 11px; }
+  .session-role { flex-basis: 100%; padding-left: 21px; font-size: 10px; }
+  .session-bar .quiet { font-size: 11px; padding-inline: 7px; }
+}

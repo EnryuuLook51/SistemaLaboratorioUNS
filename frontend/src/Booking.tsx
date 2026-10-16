@@ -4,11 +4,11 @@ import { api } from './api'
 import type { BookingForm, Course, Delegation, Lab, User } from './types'
 
 interface Props {
-  code: string; user: User; labs: Lab[]; courses: Course[]; delegations: Delegation[];
+  user: User; labs: Lab[]; courses: Course[]; delegations: Delegation[];
   form: BookingForm; setForm: (form: BookingForm) => void; onCreated: () => void
 }
 
-export default function Booking({ code, user, labs, courses, delegations, form, setForm, onCreated }: Props) {
+export default function Booking({ user, labs, courses, delegations, form, setForm, onCreated }: Props) {
   const [available, setAvailable] = useState<Lab[] | null>(null)
   const [checking, setChecking] = useState(false)
   const [submitting, setSubmitting] = useState(false)
@@ -22,11 +22,11 @@ export default function Booking({ code, user, labs, courses, delegations, form, 
     }
     const timer = window.setTimeout(() => {
       const params = new URLSearchParams({ fecha: form.fecha, inicio: form.inicio, fin: form.fin, participantes: form.participantes })
-      api<Lab[]>(`/disponibilidad?${params}`, code).then(data => { if (!ignore) setAvailable(data) })
+      api<Lab[]>(`/disponibilidad?${params}`).then(data => { if (!ignore) setAvailable(data) })
         .catch(err => { if (!ignore) setError(err.message) }).finally(() => { if (!ignore) setChecking(false) })
     }, 200)
     return () => { ignore = true; window.clearTimeout(timer) }
-  }, [code, form.fecha, form.inicio, form.fin, form.participantes])
+  }, [form.fecha, form.inicio, form.fin, form.participantes])
   const update = (key: keyof BookingForm, value: string) => {
     const next = { ...form, [key]: value }
     if (key === 'curso_id' && user.rol === 'delegado') next.responsable_id = String(delegations.find(item => item.curso_id === Number(value))?.docente_id ?? '')
@@ -41,7 +41,7 @@ export default function Booking({ code, user, labs, courses, delegations, form, 
     if (form.inicio >= form.fin) { setError('La hora de término debe ser posterior al inicio.'); return }
     setSubmitting(true)
     try {
-      await api('/reservas', code, { method: 'POST', body: JSON.stringify({ ...form, laboratorio_id: Number(form.laboratorio_id), curso_id: Number(form.curso_id), participantes: Number(form.participantes), responsable_id: user.rol === 'delegado' ? Number(form.responsable_id) : user.id }) })
+      await api('/reservas', { method: 'POST', body: JSON.stringify({ ...form, laboratorio_id: Number(form.laboratorio_id), curso_id: Number(form.curso_id), participantes: Number(form.participantes), responsable_id: user.rol === 'delegado' ? Number(form.responsable_id) : user.id }) })
       onCreated()
     } catch (err) { setError((err as Error).message) }
     finally { setSubmitting(false) }

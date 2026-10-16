@@ -15,6 +15,6 @@ from backend.seed import seed_agenda
 if __name__ == "__main__":
     with tempfile.TemporaryDirectory(prefix="uns-e2e-", dir="/tmp/opencode" if Path("/tmp/opencode").exists() else None) as folder:
         os.environ["RESERVAS_DB"] = str(Path(folder) / "reservas.sqlite3")
-        os.environ["DEMO_MODE"] = "1"
+        os.environ["DEMO_PASSWORD"] = "Uns2026!"
         seed_agenda()
         uvicorn.run("backend.web:app", host="127.0.0.1", port=8001)

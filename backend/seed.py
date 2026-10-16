@@ -1,9 +1,11 @@
 """Datos de prueba reutilizables para el modo demo local."""
 
 import argparse
+import os
 from datetime import date, timedelta
 
 from .database import connect, init_db
+from .auth import hash_password
 
 
 def seed() -> None:
@@ -26,6 +28,10 @@ def seed() -> None:
                 ("LAB-C3", "Laboratorio Multimedia C3", "Pabellón C · piso 1", 36, "36 computadoras, proyector"),
             ],
         )
+        # Solo las cuentas de ejemplo sin contraseña; nunca sobrescribir credenciales existentes.
+        for code in ("DOC001", "DEL001", "ADM001", "COO001"):
+            db.execute("UPDATE usuarios SET password_hash=? WHERE codigo_institucional=? AND password_hash IS NULL",
+                       (hash_password(os.environ.get("DEMO_PASSWORD", "Uns2026!")), code))
         db.executemany(
             "INSERT OR IGNORE INTO cursos(codigo,nombre) VALUES (?,?)",
             [("SI-II", "Sistemas de Información II"), ("REDES-I", "Redes I")],
